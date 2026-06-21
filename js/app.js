@@ -229,14 +229,14 @@ function refreshDashboard() {
     recent.forEach(p => {
         tbody.innerHTML += `
             <tr>
-                <td>${escapeHtml(p.pnr)}</td>
-                <td>${escapeHtml(p.name)}</td>
-                <td>${p.age}</td>
-                <td>${escapeHtml(p.gender)}</td>
-                <td>${escapeHtml(p.origin)}</td>
-                <td>${escapeHtml(p.destination)}</td>
-                <td>${escapeHtml(p.train)}</td>
-                <td>Rs. ${Number(p.price).toLocaleString("en-IN")}</td>
+                <td data-label="PNR">${escapeHtml(p.pnr)}</td>
+                <td data-label="Name">${escapeHtml(p.name)}</td>
+                <td data-label="Age">${p.age}</td>
+                <td data-label="Gender">${escapeHtml(p.gender)}</td>
+                <td data-label="Origin">${escapeHtml(p.origin)}</td>
+                <td data-label="Destination">${escapeHtml(p.destination)}</td>
+                <td data-label="Train No.">${escapeHtml(p.train)}</td>
+                <td data-label="Ticket Price">Rs. ${Number(p.price).toLocaleString("en-IN")}</td>
             </tr>`;
     });
 }
@@ -366,16 +366,16 @@ function displayAllPassengers() {
 
         tbody.innerHTML += `
             <tr>
-                <td>${i + 1}</td>
-                <td>${escapeHtml(p.pnr)}</td>
-                <td>${escapeHtml(p.name)}</td>
-                <td>${p.age}</td>
-                <td>${escapeHtml(p.gender)}</td>
-                <td>${escapeHtml(p.origin)}</td>
-                <td>${escapeHtml(p.destination)}</td>
-                <td>${escapeHtml(p.train)}</td>
-                <td>Rs. ${price.toLocaleString("en-IN")}</td>
-                <td>
+                <td data-label="#">${i + 1}</td>
+                <td data-label="PNR">${escapeHtml(p.pnr)}</td>
+                <td data-label="Name">${escapeHtml(p.name)}</td>
+                <td data-label="Age">${p.age}</td>
+                <td data-label="Gender">${escapeHtml(p.gender)}</td>
+                <td data-label="Origin">${escapeHtml(p.origin)}</td>
+                <td data-label="Destination">${escapeHtml(p.destination)}</td>
+                <td data-label="Train No.">${escapeHtml(p.train)}</td>
+                <td data-label="Price (Rs.)">Rs. ${price.toLocaleString("en-IN")}</td>
+                <td data-label="Action">
                     <button class="btn btn-primary btn-sm" onclick="openEditPassenger(${i})">Edit</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteFromView(${i})">Delete</button>
                 </td>
@@ -566,15 +566,15 @@ function searchPassenger() {
         // Multiple results — show table
         let rows = matches.map((p, i) => `
             <tr>
-                <td>${i + 1}</td>
-                <td>${escapeHtml(p.pnr)}</td>
-                <td>${escapeHtml(p.name)}</td>
-                <td>${p.age}</td>
-                <td>${escapeHtml(p.gender)}</td>
-                <td>${escapeHtml(p.origin)}</td>
-                <td>${escapeHtml(p.destination)}</td>
-                <td>${escapeHtml(p.train)}</td>
-                <td>Rs. ${Number(p.price).toLocaleString("en-IN")}</td>
+                <td data-label="#">${i + 1}</td>
+                <td data-label="PNR">${escapeHtml(p.pnr)}</td>
+                <td data-label="Name">${escapeHtml(p.name)}</td>
+                <td data-label="Age">${p.age}</td>
+                <td data-label="Gender">${escapeHtml(p.gender)}</td>
+                <td data-label="Origin">${escapeHtml(p.origin)}</td>
+                <td data-label="Destination">${escapeHtml(p.destination)}</td>
+                <td data-label="Train No.">${escapeHtml(p.train)}</td>
+                <td data-label="Price (Rs.)">Rs. ${Number(p.price).toLocaleString("en-IN")}</td>
             </tr>`).join("");
 
         result.innerHTML = `
