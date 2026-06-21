@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passenger Management System | Government of India</title>
+    <meta name="description" content="Passenger Management System - Official portal for travel agents to manage passenger bookings.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+<!-- ===================================================
+     LOGIN PAGE
+     =================================================== -->
+<div id="loginPage" class="page active">
+    <div class="login-wrapper">
+
+        <!-- Header -->
+        <div class="login-header">
+            <div class="emblem">🚆</div>
+            <div class="site-name">
+                <h1>Passenger Management System</h1>
+                <p>Ministry of Railways &nbsp;|&nbsp; Travel Agent Portal</p>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <div class="login-body">
+            <div class="login-box">
+                <div class="login-box-header">User Login</div>
+                <div class="login-box-body">
+                    <form id="loginForm" onsubmit="event.preventDefault(); login();">
+
+                        <div class="form-row">
+                            <label for="userid">User ID *</label>
+                            <input type="text" id="userid" placeholder="Enter User ID" required autocomplete="username">
+                            <span class="hint-text">Minimum 8 characters</span>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="password">Password *</label>
+                            <div class="pw-wrap">
+                                <input type="password" id="password" placeholder="Enter Password" required autocomplete="current-password">
+                                <button type="button" class="pw-toggle" id="togglePassword" onclick="togglePassword()" title="Show/Hide password">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
+                            <span class="hint-text">Min 10 chars · 1 Uppercase · 1 Number · 1 Special char</span>
+                        </div>
+
+                        <div class="remember-row">
+                            <input type="checkbox" id="remember">
+                            <label for="remember">Remember Me</label>
+                        </div>
+
+                        <button type="submit" class="btn-login" id="loginBtn">Login</button>
+                        <button type="reset" class="btn-reset-login" id="resetLoginBtn">Reset</button>
+
+                    </form>
+
+                    <div class="demo-box">
+                        <p><strong>Demo Login Credentials:</strong></p>
+                        <p><strong>User ID :</strong> travel123</p>
+                        <p><strong>Password :</strong> Travel@123</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="login-footer">
+            &copy; 2026 Passenger Management System &nbsp;|&nbsp; All rights reserved
+        </div>
+    </div>
+</div>
+
+
+<!-- ===================================================
+     MAIN APPLICATION
+     =================================================== -->
+<div id="appPage" class="page">
+
+    <!-- Site Header -->
+    <div class="main-header">
+        <div class="header-top">
+            <div class="emblem">🚆</div>
+            <div class="site-info">
+                <h1>Passenger Management System</h1>
+                <p>Ministry of Railways &nbsp;|&nbsp; Travel Agent Portal</p>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="main-nav">
+            <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileNav()">&#9776;</button>
+            <ul class="nav-list" id="navList">
+                <li><a href="#" class="active" data-page="dashboard" onclick="navigateTo('dashboard'); return false;" id="nav-dashboard">Dashboard</a></li>
+                <li><a href="#" data-page="add" onclick="navigateTo('add'); return false;" id="nav-add">Add Passenger</a></li>
+                <li><a href="#" data-page="view" onclick="navigateTo('view'); return false;" id="nav-view">View All</a></li>
+                <li><a href="#" data-page="search" onclick="navigateTo('search'); return false;" id="nav-search">Search</a></li>
+                <li><a href="#" data-page="delete" onclick="navigateTo('delete'); return false;" id="nav-delete">Delete</a></li>
+            </ul>
+            <button class="logout-btn" onclick="logout()" id="logoutBtn">Logout &rarr;</button>
+        </nav>
+    </div>
+
+
+    <!-- ===== DASHBOARD ===== -->
+    <section id="dashboardSection" class="section active">
+        <div class="content-area">
+
+            <div class="page-banner">
+                <h2>Dashboard</h2>
+                <p>Overview of all passenger records stored in the system</p>
+            </div>
+
+            <!-- Stats -->
+            <div class="stat-row">
+                <div class="stat-box">
+                    <span class="stat-num" id="totalPassengers">0</span>
+                    <span class="stat-lbl">Total Passengers</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-num" id="maleCount">0</span>
+                    <span class="stat-lbl">Male Passengers</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-num" id="femaleCount">0</span>
+                    <span class="stat-lbl">Female Passengers</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-num" id="totalRevenue">Rs. 0</span>
+                    <span class="stat-lbl">Total Revenue</span>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="panel">
+                <div class="panel-header">Quick Actions</div>
+                <div class="panel-body">
+                    <div class="action-row">
+                        <button class="action-link" onclick="navigateTo('add')" id="quickAddBtn">+ Add Passenger</button>
+                        <button class="action-link" onclick="navigateTo('view')" id="quickViewBtn">View All Records</button>
+                        <button class="action-link" onclick="navigateTo('search')" id="quickSearchBtn">Search by PNR</button>
+                        <button class="action-link danger" onclick="resetDatabase()" id="quickResetBtn">Reset Demo Data</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Passengers -->
+            <div class="panel">
+                <div class="panel-header">Recent Passengers (Last 5)</div>
+                <div class="panel-body">
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>PNR</th>
+                                    <th>Name</th>
+                                    <th>Age</th>
+                                    <th>Gender</th>
+                                    <th>Origin</th>
+                                    <th>Destination</th>
+                                    <th>Train No.</th>
+                                    <th>Ticket Price</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentTbody">
+                                <tr><td colspan="8" class="empty-msg">No records found</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ===== ADD PASSENGER ===== -->
+    <section id="addSection" class="section">
+        <div class="content-area">
+
+            <div class="page-banner">
+                <h2>Add New Passenger</h2>
+                <p>Fill in the form below to add a new passenger booking</p>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">Passenger Booking Form</div>
+                <div class="panel-body">
+                    <form id="passengerForm" onsubmit="event.preventDefault(); addPassenger();">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="pnr">PNR Number *</label>
+                                <input type="text" id="pnr" placeholder="e.g. PNR1005" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Passenger Name *</label>
+                                <input type="text" id="name" placeholder="Full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="age">Age *</label>
+                                <input type="number" id="age" placeholder="Age in years" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">Gender *</label>
+                                <select id="gender" required>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="origin">Origin Station *</label>
+                                <input type="text" id="origin" placeholder="Departure city" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="destination">Destination Station *</label>
+                                <input type="text" id="destination" placeholder="Arrival city" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="train">Train Number *</label>
+                                <input type="text" id="train" placeholder="e.g. TN01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="price">Ticket Price (Rs.) *</label>
+                                <input type="number" id="price" placeholder="Amount in Rupees" min="1" required>
+                            </div>
+                        </div>
+                        <div class="form-buttons">
+                            <button type="submit" class="btn btn-primary" id="addPassengerBtn">Submit</button>
+                            <button type="reset" class="btn btn-secondary" id="resetFormBtn">Reset</button>
+                            <button type="button" class="btn btn-secondary" onclick="navigateTo('view')" id="viewAllBtn">View All Records</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">Acceptance Criteria</div>
+                <div class="panel-body">
+                    <ul class="criteria-list">
+                        <li>All fields are mandatory — PNR, Name, Age, Gender, Origin, Destination, Train Number, Ticket Price</li>
+                        <li>PNR Number must be unique in the system</li>
+                        <li>Age must be a positive number greater than 0</li>
+                        <li>Ticket Price must be greater than 0</li>
+                        <li>Success or Error message will be displayed after submission</li>
+                        <li>Data is stored using browser LocalStorage (no backend required)</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ===== VIEW ALL ===== -->
+    <section id="viewSection" class="section">
+        <div class="content-area">
+
+            <div class="page-banner">
+                <h2>View All Passengers</h2>
+                <p>Complete list of passenger records stored in the system</p>
+            </div>
+
+            <!-- Mini Stats -->
+            <div class="mini-stat-row">
+                <div class="mini-stat-item">Total Records: <strong id="viewTotalCount">0</strong></div>
+                <div class="mini-stat-item">Average Ticket Price: <strong id="viewAvgPrice">Rs. 0</strong></div>
+                <div class="mini-stat-item">Highest Ticket Price: <strong id="viewHighPrice">Rs. 0</strong></div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">Passenger Records</div>
+                <div class="panel-body">
+                    <div class="filter-row">
+                        <label for="filterBox">Filter by PNR / Name:</label>
+                        <input type="text" id="filterBox" placeholder="Type to filter..." oninput="filterPassengers()">
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>PNR</th>
+                                    <th>Name</th>
+                                    <th>Age</th>
+                                    <th>Gender</th>
+                                    <th>Origin</th>
+                                    <th>Destination</th>
+                                    <th>Train No.</th>
+                                    <th>Price (Rs.)</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="viewTbody">
+                                <tr><td colspan="10" class="empty-msg">No records found</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ===== UPDATE PASSENGER ===== -->
+    <section id="updateSection" class="section">
+        <div class="content-area">
+
+            <div class="page-banner">
+                <h2>Update Passenger Details</h2>
+                <p>Modify the details of an existing passenger record</p>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">Edit Passenger Form</div>
+                <div class="panel-body">
+                    <form id="updateForm" onsubmit="event.preventDefault(); updatePassenger();">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="updatePnr">PNR Number (Read Only)</label>
+                                <input type="text" id="updatePnr" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="updateName">Passenger Name *</label>
+                                <input type="text" id="updateName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="updateAge">Age *</label>
+                                <input type="number" id="updateAge" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="updateGender">Gender *</label>
+                                <select id="updateGender" required>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="updateOrigin">Origin Station *</label>
+                                <input type="text" id="updateOrigin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="updateDestination">Destination Station *</label>
+                                <input type="text" id="updateDestination" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="updateTrain">Train Number *</label>
+                                <input type="text" id="updateTrain" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="updatePrice">Ticket Price (Rs.) *</label>
+                                <input type="number" id="updatePrice" min="1" required>
+                            </div>
+                        </div>
+                        <div class="form-buttons">
+                            <button type="submit" class="btn btn-primary" id="updatePassengerBtn">Update Record</button>
+                            <button type="button" class="btn btn-secondary" onclick="navigateTo('view')" id="cancelUpdateBtn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ===== SEARCH ===== -->
+    <section id="searchSection" class="section">
+        <div class="content-area">
+
+            <div class="page-banner">
+                <h2>Search Passenger</h2>
+                <p>Search for a specific passenger record by PNR Number</p>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">PNR Search</div>
+                <div class="panel-body">
+                    <div class="search-bar">
+                        <input type="text" id="searchPNR" placeholder="Enter PNR Number (e.g. PNR1001)">
+                        <button class="btn btn-primary" onclick="searchPassenger()" id="searchBtn">Search</button>
+                        <button class="btn btn-secondary" onclick="clearSearch()" id="clearSearchBtn">Clear</button>
+                    </div>
+
+                    <div id="searchResult">
+                        <div class="empty-msg">Enter a PNR number above and click Search to view passenger details.</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ===== DELETE ===== -->
+    <section id="deleteSection" class="section">
+        <div class="content-area">
+
+            <div class="page-banner">
+                <h2>Delete Passenger</h2>
+                <p>Search by PNR and permanently remove a passenger record</p>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">Delete by PNR Number</div>
+                <div class="panel-body">
+                    <div class="search-bar">
+                        <input type="text" id="deletePNR" placeholder="Enter PNR Number">
+                        <button class="btn btn-primary" onclick="findPassengerToDelete()" id="findDeleteBtn">Find Passenger</button>
+                        <button class="btn btn-secondary" onclick="clearDeleteResult()" id="clearDeleteBtn">Clear</button>
+                    </div>
+
+                    <div id="deleteResult">
+                        <div class="empty-msg">Enter a PNR number and click Find to locate the passenger before deleting.</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- App Footer -->
+    <footer>
+        &copy; 2026 Passenger Management System &nbsp;|&nbsp; Data stored locally using Browser LocalStorage &nbsp;|&nbsp; No backend required
+    </footer>
+
+</div><!-- end #appPage -->
+
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
