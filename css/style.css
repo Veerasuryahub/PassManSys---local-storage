@@ -34,13 +34,13 @@ body {
 }
 
 .login-header {
-    background: #003580;
+    background: #000080;
     color: #fff;
     padding: 12px 20px;
     display: flex;
     align-items: center;
     gap: 14px;
-    border-bottom: 4px solid #ff8c00;
+    border-bottom: 4px solid #FF9933;
 }
 
 .login-header .emblem {
@@ -75,12 +75,12 @@ body {
 }
 
 .login-box-header {
-    background: #003580;
+    background: #000080;
     color: #fff;
     padding: 10px 16px;
     font-size: 14px;
     font-weight: bold;
-    border-bottom: 2px solid #ff8c00;
+    border-bottom: 2px solid #FF9933;
 }
 
 .login-box-body {
@@ -113,7 +113,7 @@ body {
 
 .form-row input:focus,
 .form-row select:focus {
-    border-color: #003580;
+    border-color: #000080;
     outline: 2px solid #5b9bd5;
     outline-offset: 0;
 }
@@ -159,7 +159,7 @@ body {
 }
 
 .btn-login {
-    background: #003580;
+    background: #000080;
     color: #fff;
     border: none;
     padding: 8px 20px;
@@ -204,24 +204,24 @@ body {
 }
 
 .demo-box strong {
-    color: #003580;
+    color: #000080;
 }
 
 .login-footer {
-    background: #003580;
+    background: #000080;
     color: #c8d8f0;
     font-size: 11px;
     text-align: center;
     padding: 10px;
-    border-top: 2px solid #ff8c00;
+    border-top: 2px solid #FF9933;
 }
 
 /* =====================================================
    NAVIGATION BAR
    ===================================================== */
 .main-header {
-    background: #003580;
-    border-bottom: 4px solid #ff8c00;
+    background: #000080;
+    border-bottom: 4px solid #FF9933;
 }
 
 .header-top {
@@ -274,7 +274,7 @@ body {
 
 .nav-list li a:hover,
 .nav-list li a.active {
-    background: #ff8c00;
+    background: #FF9933;
     color: #fff;
 }
 
@@ -295,7 +295,7 @@ body {
 }
 
 .logout-btn:hover {
-    color: #ff8c00;
+    color: #FF9933;
 }
 
 .hamburger-btn {
@@ -326,14 +326,14 @@ body {
 /* ---- PAGE TITLE BANNER ---- */
 .page-banner {
     background: #e8eef7;
-    border-left: 5px solid #003580;
+    border-left: 5px solid #000080;
     padding: 10px 16px;
     margin-bottom: 20px;
 }
 
 .page-banner h2 {
     font-size: 16px;
-    color: #003580;
+    color: #000080;
     font-weight: bold;
 }
 
@@ -354,7 +354,7 @@ body {
 .stat-box {
     background: #fff;
     border: 1px solid #b0b0b0;
-    border-top: 3px solid #003580;
+    border-top: 3px solid #000080;
     padding: 14px 18px;
     flex: 1;
     min-width: 180px;
@@ -363,7 +363,7 @@ body {
 .stat-box .stat-num {
     font-size: 28px;
     font-weight: bold;
-    color: #003580;
+    color: #000080;
     display: block;
 }
 
@@ -401,7 +401,7 @@ body {
 }
 
 .action-link {
-    background: #003580;
+    background: #000080;
     color: #fff;
     border: none;
     padding: 8px 16px;
@@ -437,7 +437,7 @@ table {
 }
 
 table thead tr {
-    background: #003580;
+    background: #000080;
     color: #fff;
 }
 
@@ -496,7 +496,7 @@ table tbody td {
 
 .form-group input:focus,
 .form-group select:focus {
-    border-color: #003580;
+    border-color: #000080;
     outline: 2px solid #5b9bd5;
     outline-offset: 0;
 }
@@ -565,7 +565,7 @@ table tbody td {
 }
 
 .btn-primary {
-    background: #003580;
+    background: #000080;
     color: #fff;
 }
 
@@ -618,7 +618,7 @@ table tbody td {
 }
 
 .search-bar input:focus {
-    border-color: #003580;
+    border-color: #000080;
     outline: 2px solid #5b9bd5;
     outline-offset: 0;
 }
@@ -679,7 +679,7 @@ table tbody td {
 }
 
 .filter-row input:focus {
-    border-color: #003580;
+    border-color: #000080;
     outline: 2px solid #5b9bd5;
     outline-offset: 0;
 }
@@ -700,7 +700,7 @@ table tbody td {
 }
 
 .mini-stat-item strong {
-    color: #003580;
+    color: #000080;
 }
 
 /* ---- CRITERIA LIST ---- */
@@ -775,7 +775,7 @@ table tbody td {
 }
 
 .pagination-info select:focus {
-    border-color: #003580;
+    border-color: #000080;
     outline: 2px solid #5b9bd5;
     outline-offset: 0;
 }
@@ -794,12 +794,12 @@ table tbody td {
 
 /* ---- FOOTER ---- */
 footer {
-    background: #003580;
+    background: #000080;
     color: #c8d8f0;
     font-size: 11px;
     text-align: center;
     padding: 12px;
-    border-top: 3px solid #ff8c00;
+    border-top: 3px solid #FF9933;
     margin-top: 30px;
 }
 
@@ -851,8 +851,8 @@ footer {
 
     .mobile-logout-item a {
         background: #1a2a44 !important;
-        color: #ff8c00 !important;
-        border-top: 2px solid #ff8c00;
+        color: #FF9933 !important;
+        border-top: 2px solid #FF9933;
     }
 
     .main-nav {
@@ -1018,7 +1018,7 @@ footer {
 
     table tbody tr {
         border: 1px solid #ccc;
-        border-left: 3px solid #003580;
+        border-left: 3px solid #000080;
         margin-bottom: 12px;
         padding: 8px 0;
         background: #fff;
@@ -1052,7 +1052,7 @@ footer {
         width: 40%;
         font-weight: bold;
         font-size: 12px;
-        color: #003580;
+        color: #000080;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -1407,7 +1407,7 @@ footer {
     }
 
     .nav-list li a.active {
-        background: #ff8c00;
+        background: #FF9933;
         color: #fff;
     }
 }
