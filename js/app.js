@@ -1,6 +1,6 @@
 // ====================================
 // PASSENGER MANAGEMENT SYSTEM
-// Version: 4.0 - Inline Field Validation
+// Version: 5.0 - Paginated Passenger Records
 // Storage: Browser LocalStorage
 // ====================================
 
@@ -281,7 +281,12 @@ function navigateTo(page) {
     if (navLink) navLink.classList.add("active");
 
     if (page === "dashboard") refreshDashboard();
-    if (page === "view")      displayAllPassengers();
+    if (page === "view") {
+        const fb = document.getElementById("filterBox");
+        if (fb) fb.value = "";
+        currentPage = 1;
+        displayAllPassengers();
+    }
 
     // Clear search/delete results when navigating away
     if (page === "search") {
@@ -459,30 +464,52 @@ function addPassenger() {
 }
 
 // ====================================
-// VIEW ALL PASSENGERS
+// VIEW ALL PASSENGERS (WITH PAGINATION)
 // ====================================
+let currentPage = 1;
+let recordsPerPage = 5;
+
 function displayAllPassengers() {
     const list  = getPassengers();
     const tbody = document.getElementById("viewTbody");
     if (!tbody) return;
 
+    // Filter list based on filterBox input
+    const filterBox = document.getElementById("filterBox");
+    const q = filterBox ? (filterBox.value || "").trim().toUpperCase() : "";
+    const filteredList = list.map((p, idx) => ({ ...p, originalIndex: idx }))
+                             .filter(p => !q || p.pnr.toUpperCase().includes(q) || p.name.toUpperCase().includes(q));
+
     tbody.innerHTML = "";
 
-    if (list.length === 0) {
+    const paginationRow = document.getElementById("paginationRow");
+
+    if (filteredList.length === 0) {
         tbody.innerHTML = '<tr><td colspan="10" class="empty-msg">No records found. Add passengers using the "Add Passenger" menu.</td></tr>';
         setText("viewTotalCount", 0);
         setText("viewAvgPrice",   "Rs. 0");
         setText("viewHighPrice",  "Rs. 0");
+        if (paginationRow) paginationRow.style.display = "none";
         return;
     }
 
-    let total   = 0;
-    let highest = 0;
+    if (paginationRow) paginationRow.style.display = "flex";
 
-    list.forEach((p, i) => {
+    // Calculate total pages
+    const totalPages = Math.ceil(filteredList.length / recordsPerPage) || 1;
+    if (currentPage > totalPages) {
+        currentPage = totalPages;
+    }
+    if (currentPage < 1) {
+        currentPage = 1;
+    }
+
+    const startIndex = (currentPage - 1) * recordsPerPage;
+    const pageList = filteredList.slice(startIndex, startIndex + recordsPerPage);
+
+    pageList.forEach((p) => {
+        const i = p.originalIndex;
         const price = Number(p.price);
-        total += price;
-        if (price > highest) highest = price;
 
         tbody.innerHTML += `
             <tr>
@@ -502,27 +529,65 @@ function displayAllPassengers() {
             </tr>`;
     });
 
-    const avg = Math.round(total / list.length);
+    // Update stats based on all records (or filtered? usually all records as per view)
+    let total   = 0;
+    let highest = 0;
+    list.forEach(p => {
+        const price = Number(p.price);
+        total += price;
+        if (price > highest) highest = price;
+    });
+    const avg = list.length > 0 ? Math.round(total / list.length) : 0;
     setText("viewTotalCount", list.length);
     setText("viewAvgPrice",   "Rs. " + avg.toLocaleString("en-IN"));
     setText("viewHighPrice",  "Rs. " + highest.toLocaleString("en-IN"));
+
+    // Update pagination UI controls
+    const prevPageBtn = document.getElementById("prevPageBtn");
+    const nextPageBtn = document.getElementById("nextPageBtn");
+    const pageIndicator = document.getElementById("pageIndicator");
+    const paginationInfo = document.getElementById("paginationInfo");
+
+    if (pageIndicator) pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
+    if (prevPageBtn) prevPageBtn.disabled = (currentPage === 1);
+    if (nextPageBtn) nextPageBtn.disabled = (currentPage === totalPages);
+
+    if (paginationInfo) {
+        const endRange = Math.min(startIndex + recordsPerPage, filteredList.length);
+        paginationInfo.textContent = `Showing ${startIndex + 1} to ${endRange} of ${filteredList.length}`;
+    }
 }
 
 // ====================================
 // FILTER TABLE (by PNR or Name)
 // ====================================
 function filterPassengers() {
-    const q    = (document.getElementById("filterBox").value || "").trim().toUpperCase();
-    const rows = document.querySelectorAll("#viewTbody tr");
-    let visible = 0;
-    rows.forEach(row => {
-        if (row.cells.length < 3) { row.style.display = ""; return; }
-        const pnr  = (row.cells[1] ? row.cells[1].innerText : "").toUpperCase();
-        const name = (row.cells[2] ? row.cells[2].innerText : "").toUpperCase();
-        const show = !q || pnr.includes(q) || name.includes(q);
-        row.style.display = show ? "" : "none";
-        if (show) visible++;
-    });
+    currentPage = 1; // Reset to page 1 on filter
+    displayAllPassengers();
+}
+
+function changeRecordsPerPage() {
+    const select = document.getElementById("recordsPerPage");
+    if (select) {
+        recordsPerPage = parseInt(select.value, 10);
+        currentPage = 1;
+        displayAllPassengers();
+    }
+}
+
+function goToPage(dir) {
+    const list = getPassengers();
+    const filterBox = document.getElementById("filterBox");
+    const q = filterBox ? (filterBox.value || "").trim().toUpperCase() : "";
+    const filteredCount = list.filter(p => !q || p.pnr.toUpperCase().includes(q) || p.name.toUpperCase().includes(q)).length;
+    const totalPages = Math.ceil(filteredCount / recordsPerPage) || 1;
+
+    if (dir === 'prev' && currentPage > 1) {
+        currentPage--;
+    } else if (dir === 'next' && currentPage < totalPages) {
+        currentPage++;
+    }
+    displayAllPassengers();
 }
 
 // ====================================

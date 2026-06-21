@@ -746,6 +746,52 @@ table tbody td {
     border-left-color: #f44336;
 }
 
+/* ---- PAGINATION ---- */
+.pagination-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #ccc;
+    font-size: 13px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.pagination-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #444;
+}
+
+.pagination-info select {
+    padding: 4px 8px;
+    font-size: 13px;
+    border: 1px solid #888;
+    background: #fff;
+    cursor: pointer;
+}
+
+.pagination-info select:focus {
+    border-color: #003580;
+    outline: 2px solid #5b9bd5;
+    outline-offset: 0;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.page-indicator {
+    font-weight: bold;
+    color: #333;
+    user-select: none;
+}
+
 /* ---- FOOTER ---- */
 footer {
     background: #003580;

@@ -318,6 +318,25 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <!-- Pagination Controls -->
+                    <div class="pagination-row" id="paginationRow">
+                        <div class="pagination-info">
+                            <label for="recordsPerPage">Records per page:</label>
+                            <select id="recordsPerPage" onchange="changeRecordsPerPage()">
+                                <option value="5" selected>5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                            </select>
+                            <span id="paginationInfo">Showing 0 of 0</span>
+                        </div>
+                        <div class="pagination-controls">
+                            <button class="btn btn-secondary btn-sm" id="prevPageBtn" onclick="goToPage('prev')" disabled>← Previous</button>
+                            <span class="page-indicator" id="pageIndicator">Page 1 of 1</span>
+                            <button class="btn btn-secondary btn-sm" id="nextPageBtn" onclick="goToPage('next')" disabled>Next →</button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
