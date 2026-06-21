@@ -507,6 +507,46 @@ table tbody td {
     cursor: not-allowed;
 }
 
+/* ---- INLINE FIELD VALIDATION ---- */
+.field-error {
+    font-size: 11px;
+    color: #cc0000;
+    min-height: 16px;
+    display: block;
+    line-height: 1.4;
+    margin-top: 2px;
+    transition: opacity 0.2s ease;
+}
+
+.field-error:empty {
+    opacity: 0;
+}
+
+.field-error:not(:empty) {
+    opacity: 1;
+}
+
+.form-group input.input-error,
+.form-group select.input-error {
+    border-color: #cc0000 !important;
+    background: #fff5f5;
+}
+
+.form-group input.input-error:focus,
+.form-group select.input-error:focus {
+    outline-color: #cc0000;
+}
+
+.form-group input.input-valid,
+.form-group select.input-valid {
+    border-color: #1a7a1a !important;
+}
+
+.form-group input.input-valid:focus,
+.form-group select.input-valid:focus {
+    outline-color: #1a7a1a;
+}
+
 .form-buttons {
     margin-top: 20px;
     display: flex;

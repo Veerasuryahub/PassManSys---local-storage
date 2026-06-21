@@ -195,15 +195,23 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="pnr">PNR Number *</label>
-                                <input type="text" id="pnr" placeholder="e.g. PNR1005" required>
+                                <input type="text" id="pnr" placeholder="e.g. PNR1005" required
+                                    maxlength="10" pattern="[A-Za-z0-9]{3,10}" title="3–10 alphanumeric characters"
+                                    autocomplete="off">
+                                <span class="field-error" id="pnr-error"></span>
                             </div>
                             <div class="form-group">
                                 <label for="name">Passenger Name *</label>
-                                <input type="text" id="name" placeholder="Full name" required>
+                                <input type="text" id="name" placeholder="Full name" required
+                                    maxlength="50" pattern="[a-zA-Z][a-zA-Z\s.'\ ]{1,49}" title="Letters only, min 2 characters"
+                                    autocomplete="name">
+                                <span class="field-error" id="name-error"></span>
                             </div>
                             <div class="form-group">
                                 <label for="age">Age *</label>
-                                <input type="number" id="age" placeholder="Age in years" min="1" required>
+                                <input type="number" id="age" placeholder="Age in years" required
+                                    min="1" max="120" step="1" title="Whole number between 1 and 120">
+                                <span class="field-error" id="age-error"></span>
                             </div>
                             <div class="form-group">
                                 <label for="gender">Gender *</label>
@@ -212,22 +220,31 @@
                                     <option value="Female">Female</option>
                                     <option value="Other">Other</option>
                                 </select>
+                                <span class="field-error" id="gender-error"></span>
                             </div>
                             <div class="form-group">
                                 <label for="origin">Origin Station *</label>
-                                <input type="text" id="origin" placeholder="Departure city" required>
+                                <input type="text" id="origin" placeholder="Departure city" required
+                                    maxlength="40" pattern="[a-zA-Z][a-zA-Z\s\-'.]{1,39}" title="Letters only, min 2 characters">
+                                <span class="field-error" id="origin-error"></span>
                             </div>
                             <div class="form-group">
                                 <label for="destination">Destination Station *</label>
-                                <input type="text" id="destination" placeholder="Arrival city" required>
+                                <input type="text" id="destination" placeholder="Arrival city" required
+                                    maxlength="40" pattern="[a-zA-Z][a-zA-Z\s\-'.]{1,39}" title="Letters only, min 2 characters">
+                                <span class="field-error" id="destination-error"></span>
                             </div>
                             <div class="form-group">
                                 <label for="train">Train Number *</label>
-                                <input type="text" id="train" placeholder="e.g. TN01" required>
+                                <input type="text" id="train" placeholder="e.g. TN01" required
+                                    maxlength="10" pattern="[A-Za-z0-9\-]{2,10}" title="2–10 alphanumeric characters">
+                                <span class="field-error" id="train-error"></span>
                             </div>
                             <div class="form-group">
                                 <label for="price">Ticket Price (Rs.) *</label>
-                                <input type="number" id="price" placeholder="Amount in Rupees" min="1" required>
+                                <input type="number" id="price" placeholder="Amount in Rupees" required
+                                    min="1" max="100000" step="1" title="Whole number, Rs. 1 – Rs. 1,00,000">
+                                <span class="field-error" id="price-error"></span>
                             </div>
                         </div>
                         <div class="form-buttons">
@@ -328,11 +345,17 @@
                             </div>
                             <div class="form-group">
                                 <label for="updateName">Passenger Name *</label>
-                                <input type="text" id="updateName" required>
+                                <input type="text" id="updateName" required
+                                    maxlength="50" pattern="[a-zA-Z][a-zA-Z\s.'\ ]{1,49}" title="Letters only, min 2 characters"
+                                    placeholder="Full name">
+                                <span class="field-error" id="updateName-error"></span>
                             </div>
                             <div class="form-group">
                                 <label for="updateAge">Age *</label>
-                                <input type="number" id="updateAge" min="1" required>
+                                <input type="number" id="updateAge" required
+                                    min="1" max="120" step="1" title="Whole number between 1 and 120"
+                                    placeholder="Age in years">
+                                <span class="field-error" id="updateAge-error"></span>
                             </div>
                             <div class="form-group">
                                 <label for="updateGender">Gender *</label>
@@ -341,22 +364,35 @@
                                     <option value="Female">Female</option>
                                     <option value="Other">Other</option>
                                 </select>
+                                <span class="field-error" id="updateGender-error"></span>
                             </div>
                             <div class="form-group">
                                 <label for="updateOrigin">Origin Station *</label>
-                                <input type="text" id="updateOrigin" required>
+                                <input type="text" id="updateOrigin" required
+                                    maxlength="40" pattern="[a-zA-Z][a-zA-Z\s\-'.]{1,39}" title="Letters only, min 2 characters"
+                                    placeholder="Departure city">
+                                <span class="field-error" id="updateOrigin-error"></span>
                             </div>
                             <div class="form-group">
                                 <label for="updateDestination">Destination Station *</label>
-                                <input type="text" id="updateDestination" required>
+                                <input type="text" id="updateDestination" required
+                                    maxlength="40" pattern="[a-zA-Z][a-zA-Z\s\-'.]{1,39}" title="Letters only, min 2 characters"
+                                    placeholder="Arrival city">
+                                <span class="field-error" id="updateDestination-error"></span>
                             </div>
                             <div class="form-group">
                                 <label for="updateTrain">Train Number *</label>
-                                <input type="text" id="updateTrain" required>
+                                <input type="text" id="updateTrain" required
+                                    maxlength="10" pattern="[A-Za-z0-9\-]{2,10}" title="2–10 alphanumeric characters"
+                                    placeholder="e.g. TN01">
+                                <span class="field-error" id="updateTrain-error"></span>
                             </div>
                             <div class="form-group">
                                 <label for="updatePrice">Ticket Price (Rs.) *</label>
-                                <input type="number" id="updatePrice" min="1" required>
+                                <input type="number" id="updatePrice" required
+                                    min="1" max="100000" step="1" title="Whole number, Rs. 1 – Rs. 1,00,000"
+                                    placeholder="Amount in Rupees">
+                                <span class="field-error" id="updatePrice-error"></span>
                             </div>
                         </div>
                         <div class="form-buttons">

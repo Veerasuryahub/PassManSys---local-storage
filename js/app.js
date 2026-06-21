@@ -1,6 +1,6 @@
 // ====================================
 // PASSENGER MANAGEMENT SYSTEM
-// Version: 3.0 - Thoroughly Tested
+// Version: 4.0 - Inline Field Validation
 // Storage: Browser LocalStorage
 // ====================================
 
@@ -71,6 +71,102 @@ function isValidPNR(val) {
 // Train number: letters+numbers, 2-10 chars
 function isValidTrain(val) {
     return /^[A-Z0-9\-]{2,10}$/.test(val.trim().toUpperCase());
+}
+
+// ====================================
+// INLINE FIELD ERROR DISPLAY
+// ====================================
+function showFieldError(fieldId, msg) {
+    const errorEl = document.getElementById(fieldId + "-error");
+    const inputEl = document.getElementById(fieldId);
+    if (errorEl) errorEl.textContent = msg;
+    if (inputEl) {
+        inputEl.classList.add("input-error");
+        inputEl.classList.remove("input-valid");
+    }
+}
+
+function clearFieldError(fieldId) {
+    const errorEl = document.getElementById(fieldId + "-error");
+    const inputEl = document.getElementById(fieldId);
+    if (errorEl) errorEl.textContent = "";
+    if (inputEl) {
+        inputEl.classList.remove("input-error");
+    }
+}
+
+function markFieldValid(fieldId) {
+    const errorEl = document.getElementById(fieldId + "-error");
+    const inputEl = document.getElementById(fieldId);
+    if (errorEl) errorEl.textContent = "";
+    if (inputEl) {
+        inputEl.classList.remove("input-error");
+        inputEl.classList.add("input-valid");
+    }
+}
+
+function clearAllFieldErrors(fieldIds) {
+    fieldIds.forEach(id => {
+        clearFieldError(id);
+        const el = document.getElementById(id);
+        if (el) el.classList.remove("input-valid");
+    });
+}
+
+// ====================================
+// REAL-TIME FIELD VALIDATORS
+// ====================================
+function validateFieldOnBlur(fieldId, validatorFn, errorMsg) {
+    const el = document.getElementById(fieldId);
+    if (!el) return;
+    const val = el.value.trim();
+    if (!val) {
+        // Empty → clear any state (required will catch on submit)
+        clearFieldError(fieldId);
+        el.classList.remove("input-valid");
+        return;
+    }
+    if (validatorFn(val)) {
+        markFieldValid(fieldId);
+    } else {
+        showFieldError(fieldId, errorMsg);
+    }
+}
+
+function validateAgeField(fieldId) {
+    const el = document.getElementById(fieldId);
+    if (!el) return;
+    const raw = el.value.trim();
+    if (!raw) { clearFieldError(fieldId); el.classList.remove("input-valid"); return; }
+    if (!/^\d+$/.test(raw)) {
+        showFieldError(fieldId, "Must be a whole number. No decimals.");
+    } else {
+        const age = parseInt(raw, 10);
+        if (age < 1 || age > 120) {
+            showFieldError(fieldId, "Must be between 1 and 120.");
+        } else {
+            markFieldValid(fieldId);
+        }
+    }
+}
+
+function validatePriceField(fieldId) {
+    const el = document.getElementById(fieldId);
+    if (!el) return;
+    const raw = el.value.trim();
+    if (!raw) { clearFieldError(fieldId); el.classList.remove("input-valid"); return; }
+    if (!/^\d+$/.test(raw)) {
+        showFieldError(fieldId, "Must be a whole number. No decimals.");
+    } else {
+        const price = parseInt(raw, 10);
+        if (price < 1) {
+            showFieldError(fieldId, "Must be at least Rs. 1.");
+        } else if (price > 100000) {
+            showFieldError(fieldId, "Cannot exceed Rs. 1,00,000.");
+        } else {
+            markFieldValid(fieldId);
+        }
+    }
 }
 
 // ====================================
@@ -261,6 +357,9 @@ function escapeHtml(str) {
 // ADD PASSENGER — with full validation
 // ====================================
 function addPassenger() {
+    const addFields = ["pnr", "name", "age", "gender", "origin", "destination", "train", "price"];
+    clearAllFieldErrors(addFields);
+
     const pnr         = (document.getElementById("pnr").value         || "").trim().toUpperCase();
     const name        = (document.getElementById("name").value        || "").trim();
     const ageRaw      = document.getElementById("age").value;
@@ -270,71 +369,92 @@ function addPassenger() {
     const train       = (document.getElementById("train").value       || "").trim().toUpperCase();
     const priceRaw    = document.getElementById("price").value;
 
-    // 1. Empty check
-    if (!pnr || !name || !ageRaw || !origin || !destination || !train || !priceRaw) {
+    // 1. Empty check — highlight all empty fields
+    let hasEmpty = false;
+    if (!pnr)         { showFieldError("pnr",         "PNR is required.");         hasEmpty = true; }
+    if (!name)        { showFieldError("name",        "Name is required.");        hasEmpty = true; }
+    if (!ageRaw)      { showFieldError("age",         "Age is required.");         hasEmpty = true; }
+    if (!origin)      { showFieldError("origin",      "Origin is required.");      hasEmpty = true; }
+    if (!destination) { showFieldError("destination", "Destination is required."); hasEmpty = true; }
+    if (!train)       { showFieldError("train",       "Train No. is required.");   hasEmpty = true; }
+    if (!priceRaw)    { showFieldError("price",       "Price is required.");       hasEmpty = true; }
+    if (hasEmpty) {
         showToast("All fields are mandatory. Please fill in every field.", "error"); return;
     }
 
     // 2. PNR format
     if (!isValidPNR(pnr)) {
+        showFieldError("pnr", "3–10 alphanumeric characters (e.g. PNR1005).");
         showToast("PNR must be 3–10 alphanumeric characters (e.g. PNR1005, A12345).", "error"); return;
     }
 
     // 3. Name: letters only
     if (!isValidName(name)) {
+        showFieldError("name", "Letters only, minimum 2 characters. Numbers not allowed.");
         showToast("Passenger Name must contain only letters (min 2 characters). Numbers not allowed.", "error"); return;
     }
 
     // 4. Age: integer, 1–120
     if (!/^\d+$/.test(ageRaw.trim())) {
+        showFieldError("age", "Must be a whole number. No decimals.");
         showToast("Age must be a whole number (e.g. 25). Decimals not allowed.", "error"); return;
     }
     const age = parseInt(ageRaw, 10);
     if (age < 1 || age > 120) {
+        showFieldError("age", "Must be between 1 and 120.");
         showToast("Age must be between 1 and 120.", "error"); return;
     }
 
     // 5. Origin: letters only, no numbers
     if (!isValidStation(origin)) {
+        showFieldError("origin", "Letters only (e.g. Chennai). Numbers not allowed.");
         showToast("Origin Station must contain only letters (e.g. Chennai, New Delhi). Numbers not allowed.", "error"); return;
     }
 
     // 6. Destination: letters only, no numbers
     if (!isValidStation(destination)) {
+        showFieldError("destination", "Letters only. Numbers not allowed.");
         showToast("Destination Station must contain only letters. Numbers not allowed.", "error"); return;
     }
 
     // 7. Origin ≠ Destination
     if (origin.toUpperCase() === destination.toUpperCase()) {
+        showFieldError("destination", "Cannot be the same as Origin.");
         showToast("Origin and Destination stations cannot be the same.", "error"); return;
     }
 
     // 8. Train number format
     if (!isValidTrain(train)) {
+        showFieldError("train", "2–10 alphanumeric characters (e.g. TN01).");
         showToast("Train Number must be 2–10 alphanumeric characters (e.g. TN01, 12302).", "error"); return;
     }
 
     // 9. Price: positive integer
     if (!/^\d+$/.test(priceRaw.trim())) {
+        showFieldError("price", "Must be a whole number. No decimals.");
         showToast("Ticket Price must be a whole number in Rupees (e.g. 500). Decimals not allowed.", "error"); return;
     }
     const price = parseInt(priceRaw, 10);
     if (price < 1) {
+        showFieldError("price", "Must be at least Rs. 1.");
         showToast("Ticket Price must be at least Rs. 1.", "error"); return;
     }
     if (price > 100000) {
+        showFieldError("price", "Cannot exceed Rs. 1,00,000.");
         showToast("Ticket Price cannot exceed Rs. 1,00,000.", "error"); return;
     }
 
     // 10. Unique PNR check
     const list = getPassengers();
     if (list.some(p => p.pnr.toUpperCase() === pnr)) {
+        showFieldError("pnr", "This PNR already exists. Use a unique PNR.");
         showToast(`PNR "${pnr}" already exists. Please use a unique PNR number.`, "error"); return;
     }
 
     list.push({ pnr, name, age, gender, origin, destination, train, price });
     savePassengers(list);
     document.getElementById("passengerForm").reset();
+    clearAllFieldErrors(addFields);
     showToast(`Passenger "${name}" (PNR: ${pnr}) added successfully.`, "success");
 }
 
@@ -438,6 +558,10 @@ function openEditPassenger(index) {
     setValue("updateTrain",       p.train);
     setValue("updatePrice",       p.price);
 
+    // Clear any stale error states from previous edits
+    const updateFields = ["updateName", "updateAge", "updateGender", "updateOrigin", "updateDestination", "updateTrain", "updatePrice"];
+    clearAllFieldErrors(updateFields);
+
     navigateTo("update");
 }
 
@@ -447,6 +571,9 @@ function setValue(id, val) {
 }
 
 function updatePassenger() {
+    const updateFields = ["updateName", "updateAge", "updateGender", "updateOrigin", "updateDestination", "updateTrain", "updatePrice"];
+    clearAllFieldErrors(updateFields);
+
     const idx  = localStorage.getItem("pms_editIndex");
     const list = getPassengers();
 
@@ -462,54 +589,71 @@ function updatePassenger() {
     const train       = (document.getElementById("updateTrain").value       || "").trim().toUpperCase();
     const priceRaw    = document.getElementById("updatePrice").value;
 
-    // Empty check
-    if (!name || !ageRaw || !origin || !destination || !train || !priceRaw) {
+    // Empty check — highlight all empty fields
+    let hasEmpty = false;
+    if (!name)        { showFieldError("updateName",        "Name is required.");        hasEmpty = true; }
+    if (!ageRaw)      { showFieldError("updateAge",         "Age is required.");         hasEmpty = true; }
+    if (!origin)      { showFieldError("updateOrigin",      "Origin is required.");      hasEmpty = true; }
+    if (!destination) { showFieldError("updateDestination", "Destination is required."); hasEmpty = true; }
+    if (!train)       { showFieldError("updateTrain",       "Train No. is required.");   hasEmpty = true; }
+    if (!priceRaw)    { showFieldError("updatePrice",       "Price is required.");       hasEmpty = true; }
+    if (hasEmpty) {
         showToast("All fields are mandatory.", "error"); return;
     }
 
     // Name
     if (!isValidName(name)) {
+        showFieldError("updateName", "Letters only, minimum 2 characters.");
         showToast("Passenger Name must contain only letters (min 2 characters). Numbers not allowed.", "error"); return;
     }
 
     // Age
     if (!/^\d+$/.test(ageRaw.trim())) {
+        showFieldError("updateAge", "Must be a whole number. No decimals.");
         showToast("Age must be a whole number. Decimals not allowed.", "error"); return;
     }
     const age = parseInt(ageRaw, 10);
     if (age < 1 || age > 120) {
+        showFieldError("updateAge", "Must be between 1 and 120.");
         showToast("Age must be between 1 and 120.", "error"); return;
     }
 
     // Origin
     if (!isValidStation(origin)) {
+        showFieldError("updateOrigin", "Letters only. Numbers not allowed.");
         showToast("Origin Station must contain only letters. Numbers not allowed.", "error"); return;
     }
 
     // Destination
     if (!isValidStation(destination)) {
+        showFieldError("updateDestination", "Letters only. Numbers not allowed.");
         showToast("Destination Station must contain only letters. Numbers not allowed.", "error"); return;
     }
 
     // Origin ≠ Destination
     if (origin.toUpperCase() === destination.toUpperCase()) {
+        showFieldError("updateDestination", "Cannot be the same as Origin.");
         showToast("Origin and Destination stations cannot be the same.", "error"); return;
     }
 
     // Train
     if (!isValidTrain(train)) {
+        showFieldError("updateTrain", "2–10 alphanumeric characters.");
         showToast("Train Number must be 2–10 alphanumeric characters.", "error"); return;
     }
 
     // Price
     if (!/^\d+$/.test(priceRaw.trim())) {
+        showFieldError("updatePrice", "Must be a whole number. No decimals.");
         showToast("Ticket Price must be a whole number in Rupees. Decimals not allowed.", "error"); return;
     }
     const price = parseInt(priceRaw, 10);
     if (price < 1) {
+        showFieldError("updatePrice", "Must be at least Rs. 1.");
         showToast("Ticket Price must be at least Rs. 1.", "error"); return;
     }
     if (price > 100000) {
+        showFieldError("updatePrice", "Cannot exceed Rs. 1,00,000.");
         showToast("Ticket Price cannot exceed Rs. 1,00,000.", "error"); return;
     }
 
@@ -522,6 +666,7 @@ function updatePassenger() {
 
     savePassengers(list);
     localStorage.removeItem("pms_editIndex");
+    clearAllFieldErrors(updateFields);
     showToast(`Passenger "${name}" (PNR: ${oldPnr}) updated successfully.`, "success");
     setTimeout(() => navigateTo("view"), 800);
 }
@@ -708,6 +853,55 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const deleteInput = document.getElementById("deletePNR");
     if (deleteInput) deleteInput.addEventListener("keydown", handleDeleteKey);
+
+    // ---- REAL-TIME VALIDATION (blur) for Add Passenger Form ----
+    bindBlur("pnr",         () => validateFieldOnBlur("pnr",         isValidPNR,     "3–10 alphanumeric characters (e.g. PNR1005)."));
+    bindBlur("name",        () => validateFieldOnBlur("name",        isValidName,    "Letters only, min 2 characters."));
+    bindBlur("age",         () => validateAgeField("age"));
+    bindBlur("origin",      () => validateFieldOnBlur("origin",      isValidStation, "Letters only (e.g. Chennai)."));
+    bindBlur("destination", () => validateFieldOnBlur("destination", isValidStation, "Letters only (e.g. Madurai)."));
+    bindBlur("train",       () => validateFieldOnBlur("train",       isValidTrain,   "2–10 alphanumeric characters."));
+    bindBlur("price",       () => validatePriceField("price"));
+
+    // ---- REAL-TIME VALIDATION (blur) for Update Passenger Form ----
+    bindBlur("updateName",        () => validateFieldOnBlur("updateName",        isValidName,    "Letters only, min 2 characters."));
+    bindBlur("updateAge",         () => validateAgeField("updateAge"));
+    bindBlur("updateOrigin",      () => validateFieldOnBlur("updateOrigin",      isValidStation, "Letters only."));
+    bindBlur("updateDestination", () => validateFieldOnBlur("updateDestination", isValidStation, "Letters only."));
+    bindBlur("updateTrain",       () => validateFieldOnBlur("updateTrain",       isValidTrain,   "2–10 alphanumeric characters."));
+    bindBlur("updatePrice",       () => validatePriceField("updatePrice"));
+
+    // ---- Clear validation states on form reset ----
+    const addForm = document.getElementById("passengerForm");
+    if (addForm) {
+        addForm.addEventListener("reset", () => {
+            setTimeout(() => {
+                clearAllFieldErrors(["pnr", "name", "age", "gender", "origin", "destination", "train", "price"]);
+            }, 10);
+        });
+    }
+
+    const updateForm = document.getElementById("updateForm");
+    if (updateForm) {
+        updateForm.addEventListener("reset", () => {
+            setTimeout(() => {
+                clearAllFieldErrors(["updateName", "updateAge", "updateGender", "updateOrigin", "updateDestination", "updateTrain", "updatePrice"]);
+            }, 10);
+        });
+    }
 });
 
-console.log("Passenger Management System v3.0 loaded.");
+function bindBlur(fieldId, handler) {
+    const el = document.getElementById(fieldId);
+    if (el) {
+        el.addEventListener("blur", handler);
+        // Also validate on input for immediate feedback when correcting errors
+        el.addEventListener("input", () => {
+            if (el.classList.contains("input-error")) {
+                handler();
+            }
+        });
+    }
+}
+
+console.log("Passenger Management System v4.0 loaded — with inline field validation.");
