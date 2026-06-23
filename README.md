@@ -6,7 +6,8 @@
 
 ## 🔗 Live Demo
 
-**Deployed URL:** [https://veerasuryahub.github.io/PassManSys---local-storage/](https://veerasuryahub.github.io/PassManSys---local-storage/)
+- **Vercel Production:** [https://passmansys-local-storage.vercel.app](https://passmansys-local-storage.vercel.app)
+- **GitHub Pages:** [https://veerasuryahub.github.io/PassManSys---local-storage/](https://veerasuryahub.github.io/PassManSys---local-storage/)
 
 ---
 
@@ -159,13 +160,15 @@ The **Passenger Management System (PMS)** is a government-style web application 
 
 ### Phase 5 — Deployment
 
-**Platform:** GitHub Pages  
-**Deployment Method:** Push to `main` branch → GitHub Pages auto-deploys
+**Platforms:** GitHub Pages & Vercel
 
-**Steps:**
-1. Code committed to `main` branch
-2. GitHub Pages enabled on Settings → Pages → Source: `main` branch `/` root
-3. Site live at: `https://veerasuryahub.github.io/PassManSys---local-storage/`
+**GitHub Pages:**
+- Auto-deploys on pushing to the `main` branch.
+- Deployed URL: [https://veerasuryahub.github.io/PassManSys---local-storage/](https://veerasuryahub.github.io/PassManSys---local-storage/)
+
+**Vercel Production Deployment:**
+- Connected and auto-deploying via GitHub integration.
+- Production URL: [https://passmansys-local-storage.vercel.app](https://passmansys-local-storage.vercel.app)
 
 ---
 
@@ -197,6 +200,7 @@ PassManSys---local-storage/
 | LocalStorage API | Client-side data persistence |
 | Font Awesome 6 | Icons |
 | GitHub Pages | Free static hosting |
+| Vercel | Production hosting & deployment |
 
 ---
 
